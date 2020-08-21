@@ -1,0 +1,7 @@
+wheel
+Flask
+Werkzeug==0.16.1
+Flask-SQLAlchemy
+flask-cors
+passlib
+flask-restplus
