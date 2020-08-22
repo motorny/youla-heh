@@ -28,7 +28,7 @@ class GetPostStats(Resource):
         """
         args = get_post_parser.parse_args()
         post_id = args["post_id"]
-        resp = get_post_info(post_id)
+        resp = generate_comments_list_by_shortcode(post_id)
 
         return resp, 200
 

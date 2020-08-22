@@ -38,3 +38,19 @@ def get_profile_info(profile_id):
     except instaloader.exceptions.QueryReturnedNotFoundException:
         abort(404, "Profile not found", status="Failed")
     return {"posts": [{"shortcode": p.shortcode, "caption": p.caption} for p in posts]}
+
+
+def generate_comments_list_by_shortcode(shortcode):
+    l = Loader.get()
+    try:
+        ad_post = instaloader.Post.from_shortcode(l.loader.context, shortcode)
+        comments_instaces_list = list(ad_post.get_comments())
+        comments_list = []
+
+        for comment in comments_instaces_list:
+            comment_text = comment.text.lower()
+            comments_list.append(comment_text)
+    except instaloader.exceptions.QueryReturnedNotFoundException:
+        abort(404, "Post not found", status="Failed")
+    return comments_list
+    
