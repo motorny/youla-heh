@@ -2,6 +2,9 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 import pandas as pd
 import numpy as np
+import sklearn
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.feature_extraction.text import CountVectorizer
 import re
 from sklearn.model_selection import train_test_split
 from keras import backend as K
@@ -13,6 +16,7 @@ from keras.layers.embeddings import Embedding
 from keras import optimizers
 from keras.layers import Dense, concatenate, Activation, Dropout
 from keras.models import Model
+from googletrans import Translator
 from keras.layers.convolutional import Conv1D
 from keras.layers.pooling import GlobalMaxPooling1D
 
@@ -20,7 +24,8 @@ from keras.layers.pooling import GlobalMaxPooling1D
 class CNN:
     SENTENCE_LENGTH = 26
     NUM = 100000
-    __instance=None
+    __instance = None
+
     def __init__(self):
         if self.__instance is None:
             n = ['id', 'date', 'name', 'text', 'typr', 'rep', 'rtw', 'faw', 'stcount', 'foll', 'frien', 'listcount']
@@ -47,8 +52,6 @@ class CNN:
             w2v_model = Word2Vec.load('./youla/model/tweets_model.w2v')
             DIM = w2v_model.vector_size
             embedding_matrix = np.zeros((self.NUM, int(DIM)))
-
-
 
             for word, i in self.tokenizer.word_index.items():
                 if i >= self.NUM:
@@ -78,7 +81,28 @@ class CNN:
             self.model = Model(inputs=[tweet_input], outputs=[output])
             self.model.compile(loss='binary_crossentropy', optimizer='adam')
             self.model.load_weights('./youla/model/cnn-frozen-embeddings-09-0.77.hdf5')
+
+            f = open('./youla/model/SMSSpamCollection.txt')
+            X_spam = []
+            y_spam = []
+            for line in f:
+                y_spam.append(line.split("\t")[0])
+                X_spam.append(line.split("\t")[1])
+
+            self.cv = CountVectorizer()
+
+            X_spam = self.cv.fit_transform(X_spam)  # Fit the Data
+
+            self.clf = BernoulliNB()
+            self.clf.fit(X_spam, y_spam)
+
+            self.translator = Translator()
+            # clf.predict(X_tes)
             print('init finished')
+
+
+
+
         else:
             raise RuntimeError("A class is a singleton")
 
@@ -95,20 +119,34 @@ class CNN:
         return text.strip()
 
     def run_model(self, array_str):
+        array_str, count_spam = self.detect_spam(array_str)
         s = [self.preprocess_text(t) for t in array_str]
         x_train_seq = self.get_sequences(self.tokenizer, s)
         predicted = np.round(self.model.predict(x_train_seq))
         # возвращает долю позитивных
-        return int(sum(np.asarray(predicted))[0]), len(predicted) - int(sum(np.asarray(predicted))[0])
+        return int(sum(np.asarray(predicted))[0]), len(predicted) - int(sum(np.asarray(predicted))[0]), count_spam
+
+    def detect_spam(self, array_str):
+        data = [self.translator.translate(elem, src='ru', dest='en').text for elem in array_str]
+        data_trans = self.cv.transform(data)
+
+        spam = []
+        data_pos = []
+        count = 0
+        for index, elem in enumerate(self.clf.predict(data_trans)):
+            if elem == 'spam':
+                spam.append(array_str[index])
+                count += 1
+            else:
+                data_pos.append(array_str[index])
+
+        print(spam)
+
+        return data_pos, count
+
 
     @classmethod
     def get(cls):
         if not cls.__instance:
             cls.__instance = CNN()
         return cls.__instance
-
-
-
-
-
-
