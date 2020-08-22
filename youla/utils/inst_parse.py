@@ -2,22 +2,6 @@ from itertools import takewhile
 from datetime import timedelta, datetime
 
 
-def get_post_comments(post, max_comments=100):
-    post_with_comments = {}
-    post_with_comments["shortcode"] = post.shortcode
-    post_with_comments["post_text"] = post.caption
-    post_with_comments["comments"] = []
-    comments = post.get_comments()
-
-    for comment in comments:
-        post_with_comments["comments"].append(comment.text)
-        for answer in comment.answers:
-            post_with_comments["comments"].append(answer.text)
-        if len(post_with_comments["comments"]) >= max_comments:
-            break
-    return post_with_comments
-
-
 def no_more_than(limit):
     def limiter(gen):
         cnt = 0
@@ -57,10 +41,16 @@ def get_monthly_dynamic(profile):
     return monthly_dynamic
 
 
-def get_profile_posts(profile, max_posts=10):
+def get_profile_posts_top_info(profile, max_posts=10):
     cutoff = no_more_than(max_posts)
-    posts = [p for p in cutoff(profile.get_posts())]
-    return posts
+    captions_list = []
+    comments_amounts = []
+
+    for p in cutoff(profile.get_posts())
+        captions_list.append(p.caption)
+        comments_amounts.append(p.comments)
+
+    return captions_list, comments_amounts
 
 
 def get_post_comments_list(ad_post):
