@@ -2,7 +2,7 @@ import instaloader
 from flask import abort
 
 from youla.utils.inst_parse import get_post_comments, get_profile_posts, get_monthly_dynamic, get_post_comments_list
-
+from youla.model.mood_analysis import CNN
 
 class Loader:
     __instance = None
@@ -26,9 +26,12 @@ def get_post_info(post_id):
         post = instaloader.Post.from_shortcode(l.loader.context, post_id)
         post_comms = get_post_comments(post)
         post_comments_list = get_post_comments_list(post)
+        cnn = CNN.get()
+        posRate = cnn.run_model(post_comments_list[:10])
+        print("Analyzing with CNN")
     except instaloader.exceptions.QueryReturnedNotFoundException:
         abort(404, "Post not found", status="Failed")
-    return post_comms
+    return {"postitiveRate":posRate}
 
 
 def get_profile_info(profile_id):
@@ -39,4 +42,4 @@ def get_profile_info(profile_id):
         monthly_dynamic = get_monthly_dynamic(profile)
     except instaloader.exceptions.QueryReturnedNotFoundException:
         abort(404, "Profile not found", status="Failed")
-    return {"posts": [{"shortcode": p.shortcode, "caption": p.caption} for p in posts]}
+    return {"monthly_dynamic": monthly_dynamic}

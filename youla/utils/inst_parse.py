@@ -39,7 +39,7 @@ def no_latter_than(limit):
     return limiter
 
 
-def get_monthly_dynamic(profile)
+def get_monthly_dynamic(profile):
     monthly_dynamic = []
 
     delta = timedelta(30)

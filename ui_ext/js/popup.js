@@ -1,17 +1,9 @@
-let changeColor = document.getElementById('changeColor');
+let enableButton = document.getElementById('enableButton');
 
-chrome.storage.sync.get('color', function (data) {
-    console.log(data)
-    changeColor.style.backgroundColor = data.color;
-    changeColor.setAttribute('value', data.color);
-});
-
-changeColor.onclick = function (element) {
+enableButton.onclick = function (element) {
     let color = element.target.value;
-    console.log("color click")
-    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-        chrome.tabs.executeScript(
-            tabs[0].id,
-            {code: 'document.body.style.backgroundColor = "' + color + '";'});
+    console.log("button click")
+    chrome.storage.sync.set({grapghEnabled: true}, function() {
+        console.log("Enabled");
     });
 };

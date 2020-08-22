@@ -6,7 +6,7 @@ function updateCharts(data) {
         return;
     }
 
-    chartData = [data.commentsPositiveCnt, data.commentsNegativeCnt, data.commentsSpamCnt]
+    chartData = [data.postitiveRate, 1.0 - data.postitiveRate]
 
     document.yoloco_chart.data.datasets.forEach((dataset) => {
         dataset.data = chartData
@@ -23,8 +23,27 @@ function injectCanvas() {
     }
 
     setTimeout(() => {
+        var type, key;
+        var curPath = window.location.pathname;
+        var parts = curPath.split('/')
+        var ID;
+        if (parts.length > 2)
+            ID = parts[1];
+        if (ID === 'p')
+        {
+            ID = parts[2];
+            type = '/p/stats';
+            key = 'post_id';
+        } else
+        {
+            type = '/stats';
+            key = 'profile_id';
+        }
+        console.log('Type',type);
+        console.log('ID', ID);
+
         var xhr = new XMLHttpRequest();
-        var url = "https://194-67-110-28.cloudvps.regruhosting.ru/inst/stats";
+        var url = "https://194-67-110-28.cloudvps.regruhosting.ru/inst" + type;
         xhr.open("POST", url, true);
         xhr.responseType = 'json';
         xhr.setRequestHeader("Content-Type", "application/json");
@@ -36,8 +55,9 @@ function injectCanvas() {
                 updateCharts(data);
             }
         };
+
         var data = JSON.stringify({
-            "profile_id": "ds"
+            [key]: ID
         });
         xhr.send(data);
     }, 1000);
@@ -60,7 +80,7 @@ function populateChart(context) {
     var myChart = new Chart(context, {
         type: 'doughnut',
         data: {
-            labels: ['Позитивные', 'Негативные', 'Спам'],
+            labels: ['Позитивные', 'Негативные'],
             datasets: [{
                 label: 'Количество комментариев',
                 data: [],
@@ -68,7 +88,6 @@ function populateChart(context) {
                     [
                         'rgb(5,250,25)',
                         'rgb(250,119,5)',
-                        'rgb(103,155,241)'
                     ]
             }]
         },
@@ -86,3 +105,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 injectCanvas();
+
+chrome.storage.sync.get('grapghEnabled', function (data) {
+    console.log(data.grapghEnabled)
+});
+
