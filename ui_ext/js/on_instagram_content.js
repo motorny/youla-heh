@@ -22,12 +22,21 @@ function updateProfileCharts(data) {
     }
     console.log('Updating post chart with data:', data);
 
-    chartData = data.monthly_dynamic
+    var chartMonthlyData = data.monthly_dynamic
 
     document.yolocoProfileChart.data.datasets.forEach((dataset) => {
-        dataset.data = chartData
+        dataset.data = chartMonthlyData
     });
     document.yolocoProfileChart.update();
+
+    var chartTop = data.top_profile_analysis;
+    console.log(chartTop);
+
+    document.yolocoProfileChart2.data.datasets[0].data = chartTop.total
+    document.yolocoProfileChart2.data.datasets[1].data = chartTop.posCnt
+    document.yolocoProfileChart2.data.datasets[2].data = chartTop.negCnt
+    document.yolocoProfileChart2.update();
+
 }
 
 
@@ -56,13 +65,17 @@ function injectProfileCanvas() {
     var checkExist = setInterval(function () {
         if (!$('#yolocoProfileChart').length) {
             var header = $("header.vtbgv");
-            var container = $("<div class=\"chart-container\" style=\"position: relative;  height=500px\">")
+            var container = $("<div class=\"chart-container\" style=\"position: relative;  height: 150px\">")
             var canvas = $("<canvas id=\"yolocoProfileChart\"></canvas>")
+            var container2 = $("<div class=\"chart-container\" style=\"position: relative;  height: 250px\">")
+            var canvas2 = $("<canvas id=\"yolocoProfileChart2\"></canvas>")
+            header.after(container2);
+            container2.append(canvas2);
             header.after(container);
-            container.append(canvas)
+            container.append(canvas);
         } else {
             clearInterval(checkExist);
-            populateProfileChart($('#yolocoProfileChart'))
+            populateProfileChart($('#yolocoProfileChart'), $('#yolocoProfileChart2'))
         }
     }, 100);
 }
@@ -95,7 +108,7 @@ function injectPostCanvas() {
     var checkExist = setInterval(function () {
         if (!$('#yolocoPostChart').length) {
             var header = $("header.UE9AK");
-            var container = $("<div class=\"chart-container\" style=\"position: relative; width:600px; height=360px\">")
+            var container = $("<div class=\"chart-container\" style=\"position: relative; margin-right:335px\">")
             var canvas = $("<canvas id=\"yolocoPostChart\"></canvas>")
             header.parent().append(container);
             container.append(canvas)
@@ -122,18 +135,18 @@ var monhtsArr = [
     'Декабрь',
 ];
 
-Array.prototype.rotate = function(n) {
+Array.prototype.rotate = function (n) {
     while (this.length && n < 0) n += this.length;
     this.push.apply(this, this.splice(0, n));
     return this;
 }
 
-function populateProfileChart(context) {
+function populateProfileChart(context, context2) {
     console.log('drawing on profile canvas');
     var cd = new Date();
     var monthi = cd.getMonth();
     var myChart = new Chart(context, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: monhtsArr.rotate(monthi + 1),
             datasets: [{
@@ -146,13 +159,53 @@ function populateProfileChart(context) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true
+            maintainAspectRatio: false
         }
     });
+
+    var topCharts = new Chart(context2, {
+        type: 'line',
+        data: {
+            labels: monhtsArr.rotate(monthi + 1),
+            datasets: [{
+                label: 'Общее количество',
+                data: [],
+                backgroundColor: 'rgba(73,219,209,0.51)',
+                borderColor: 'rgb(0,201,185)',
+
+            },
+            {
+                label: 'Позитивные',
+                data: [],
+                backgroundColor: 'rgba(40,219,34,0.38)',
+                borderColor: 'rgb(0,189,9)',
+
+            },
+            {
+                label: 'Негативные',
+                data: [],
+                backgroundColor: 'rgba(219,71,34,0.65)',
+                borderColor: 'rgb(217,12,53)',
+
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+
     document.yolocoProfileChart = myChart;
     document.yolocoProfileChart.data.datasets.forEach((dataset) => {
         dataset.data = [];
     });
+
+    document.yolocoProfileChart2 = topCharts;
+    document.yolocoProfileChart2.data.datasets.forEach((dataset) => {
+        dataset.data = [];
+    });
+
 
     console.log('Sending request for profile')
     var curPath = window.location.pathname;

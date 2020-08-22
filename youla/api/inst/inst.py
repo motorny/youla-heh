@@ -47,8 +47,8 @@ class GetProfileStats(Resource):
         """
         args = get_profile_parser.parse_args()
         profile_id = args["profile_id"]
+        print(f"Processing {profile_id} profile request")
         resp = get_profile_info(profile_id)
         # handle this data to compose stats
-        print(f"Processing f{profile_id} profile request")
         resp.update({"status": "Success"})
         return resp, 200
