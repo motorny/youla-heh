@@ -46,7 +46,7 @@ def get_profile_posts_top_info(profile, max_posts=10):
     captions_list = []
     comments_amounts = []
 
-    for p in cutoff(profile.get_posts())
+    for p in cutoff(profile.get_posts()):
         captions_list.append(p.caption)
         comments_amounts.append(p.comments)
 

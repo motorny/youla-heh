@@ -17,7 +17,8 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {    console.log(changeInfo)
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    console.log(changeInfo)
     if (changeInfo.url) {
         console.log('sending update')
         chrome.tabs.sendMessage(tabId, {

@@ -99,7 +99,7 @@ class CNN:
         x_train_seq = self.get_sequences(self.tokenizer, s)
         predicted = np.round(self.model.predict(x_train_seq))
         # возвращает долю позитивных
-        return sum(np.asarray(predicted))[0]/len(predicted)
+        return int(sum(np.asarray(predicted))[0]), len(predicted) - int(sum(np.asarray(predicted))[0])
 
     @classmethod
     def get(cls):

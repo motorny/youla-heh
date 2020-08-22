@@ -27,11 +27,11 @@ def get_post_info(post_id):
         post_comments_list = get_post_comments_list(post)
         post_caption = post.caption
         cnn = CNN.get()
-        posRate = cnn.run_model(post_comments_list[:10])
-        print("Analyzing with CNN")
+        print(f"Analyzing {len(post_comments_list)} comments with CNN")
+        negCnt, posCnt = cnn.run_model(post_comments_list)
     except instaloader.exceptions.QueryReturnedNotFoundException:
         abort(404, "Post not found", status="Failed")
-    return {"postitiveRate":posRate}
+    return {"posCnt":posCnt, "negCnt":negCnt}
 
 
 def get_profile_info(profile_id):

@@ -1,5 +1,10 @@
 # Project title
 
+## Установка расширения в браузер
+
+
+
+
 ## Simple run
 
 ```bash
