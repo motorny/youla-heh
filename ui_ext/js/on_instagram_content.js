@@ -7,7 +7,7 @@ function updatePostCharts(data) {
     }
     console.log('Updating post chart with data:', data);
 
-    chartData = [data.posCnt, data.negCnt]
+    chartData = [data.posCnt, data.negCnt, data.spamCnt]
 
     document.yolocoPostChart.data.datasets.forEach((dataset) => {
         dataset.data = chartData
@@ -35,6 +35,7 @@ function updateProfileCharts(data) {
     document.yolocoProfileChart2.data.datasets[0].data = chartTop.total
     document.yolocoProfileChart2.data.datasets[1].data = chartTop.posCnt
     document.yolocoProfileChart2.data.datasets[2].data = chartTop.negCnt
+    document.yolocoProfileChart2.data.datasets[2].data = chartTop.spamCnt
     document.yolocoProfileChart2.update();
 
 }
@@ -148,7 +149,7 @@ function populateProfileChart(context, context2) {
     var myChart = new Chart(context, {
         type: 'bar',
         data: {
-            labels: monhtsArr.rotate(monthi + 1),
+            labels: monhtsArr.rotate(11-monthi),
             datasets: [{
                 label: 'Количество постов',
                 data: [],
@@ -166,7 +167,7 @@ function populateProfileChart(context, context2) {
     var topCharts = new Chart(context2, {
         type: 'line',
         data: {
-            labels: monhtsArr.rotate(monthi + 1),
+            labels: [1,2,3,4,5],
             datasets: [{
                 label: 'Общее количество',
                 data: [],
@@ -186,6 +187,13 @@ function populateProfileChart(context, context2) {
                 data: [],
                 backgroundColor: 'rgba(219,71,34,0.65)',
                 borderColor: 'rgb(217,12,53)',
+
+            },
+            {
+                label: 'Спам',
+                data: [],
+                backgroundColor: 'rgba(245,220,51,0.65)',
+                borderColor: 'rgb(231,223,0)',
 
             }]
         },
@@ -239,14 +247,15 @@ function populatePostChart(context) {
     var myChart = new Chart(context, {
         type: 'doughnut',
         data: {
-            labels: ['Позитивные', 'Негативные'],
+            labels: ['Позитивные', 'Негативные', 'Спам'],
             datasets: [{
                 label: 'Количество комментариев',
                 data: [],
                 backgroundColor:
                     [
-                        'rgb(5,250,25)',
-                        'rgb(250,119,5)',
+                        'rgba(5,250,25,0.39)',
+                        'rgba(250,54,5,0.42)',
+                        'rgba(250,226,5,0.38)',
                     ]
             }]
         },

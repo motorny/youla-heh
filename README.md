@@ -77,12 +77,36 @@ sudo a2enmod proxy_balancer
 sudo a2enmod lbmethod_byrequests
 ```
  
+Перезапустите сервис
+
+```
+sudo systemctl start apache2
+```
+ 
+Запустите сборку контейнера, а затем и сам контейнер
+```
+docker run  -p 8008:8008 -d youla-dev
+
+# check it is started
+docker ps
+
+```
+
+
+ 
+### Development
+
+```
+docker image build -t youla-dev ./
+```
+
+
+###### Simpliest start
 ```bash
 bash ./run.sh
 
 ```
-
-## Docker build and run
+###### Docker build and run
 
 ```bash
 docker image build -t youla-dev ./
@@ -91,7 +115,6 @@ docker image build -t youla-dev ./
 docker ls
 
 docker run  -p 8008:8008 -d youla-dev
-docker run  -d youla-dev
 
 # check it is started
 docker ps

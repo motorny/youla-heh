@@ -29,10 +29,10 @@ def get_post_info(post_id):
         post_caption = post.caption
         cnn = CNN.get()
         print(f"Analyzing {len(post_comments_list)} comments with CNN")
-        negCnt, posCnt = cnn.run_model(post_comments_list)
+        negCnt, posCnt, spamCnt = cnn.run_model(post_comments_list)
     except instaloader.exceptions.QueryReturnedNotFoundException:
         abort(404, "Post not found", status="Failed")
-    return {"posCnt": posCnt, "negCnt": negCnt}
+    return {"posCnt": posCnt, "negCnt": negCnt, "spamCnt":spamCnt}
 
 
 def get_profile_info(profile_id):
@@ -42,15 +42,16 @@ def get_profile_info(profile_id):
         posts_captures, comments_amounts, comments_lists = get_profile_posts_top_info(profile)
 
         cnn = CNN.get()
-        result = {"negCnt": [], "posCnt": [], "total": []}
+        result = {"negCnt": [], "posCnt": [], "total": [], "spamCnt":[]}
         for post_comments_list in comments_lists:
             if len(post_comments_list) == 0:
                 continue
             print(f"Analyzing {len(post_comments_list)} comments with CNN")
-            negCnt, posCnt = cnn.run_model(post_comments_list)
+            negCnt, posCnt, spamCnt = cnn.run_model(post_comments_list)
             result["negCnt"].append(negCnt)
             result["posCnt"].append(posCnt)
-            result["total"].append(posCnt + negCnt)
+            result["spamCnt"].append(spamCnt)
+            result["total"].append(posCnt + negCnt + spamCnt)
 
 
         monthly_dynamic = get_monthly_dynamic(profile)
