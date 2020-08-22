@@ -38,8 +38,17 @@ def get_profile_info(profile_id):
     l = Loader.get()
     try:
         profile = instaloader.Profile.from_username(l.loader.context, profile_id)
-        posts_captures, comments_amounts = get_profile_posts_top_info(profile)
+        posts_captures, comments_amounts, comments_lists = get_profile_posts_top_info(profile)
+        
+        top_profile_analysis = []
+        for post_comments_list in comments_lists:
+            cnn = CNN.get()
+            print(f"Analyzing {len(post_comments_list)} comments with CNN")
+            negCnt, posCnt = cnn.run_model(post_comments_list)
+            result = {"negCnt": negCnt, "posCnt": posCnt}
+            top_profile_analysis.append(result)
+
         monthly_dynamic = get_monthly_dynamic(profile)
     except instaloader.exceptions.QueryReturnedNotFoundException:
         abort(404, "Profile not found", status="Failed")
-    return {"monthly_dynamic": monthly_dynamic}
+    return {"monthly_dynamic": monthly_dynamic, "top_profile_analysis": top_profile_analysis}

@@ -41,16 +41,18 @@ def get_monthly_dynamic(profile):
     return monthly_dynamic
 
 
-def get_profile_posts_top_info(profile, max_posts=10):
+def get_profile_posts_top_info(profile, max_posts=5):
     cutoff = no_more_than(max_posts)
     captions_list = []
     comments_amounts = []
+    comments_lists_list = []
 
-    for p in cutoff(profile.get_posts()):
-        captions_list.append(p.caption)
-        comments_amounts.append(p.comments)
+    for post in cutoff(profile.get_posts()):
+        captions_list.append(post.caption)
+        comments_amounts.append(post.comments)
+        comments_lists_list.append(get_post_comments_list(post))
 
-    return captions_list, comments_amounts
+    return captions_list, comments_amounts, comments_lists_list
 
 
 def get_post_comments_list(ad_post):
