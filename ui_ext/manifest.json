@@ -1,0 +1,60 @@
+{
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": false
+  },
+
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "identity",
+    "declarativeContent",
+    "https://www.googleapis.com/",
+    "http://194.67.110.28:8008/*",
+    "https://www.instagram.com/"
+  ],
+
+  "content_scripts": [
+    {
+      "css": [
+        "/css/bootstrap.min.css",
+        "/css/style.css",
+        "/css/modals.css"
+      ],
+      "js": [
+        "/js/on_instagram_content.js"
+      ],
+      
+      "matches": [
+        "*://www.instagram.com//*"
+      ]
+    }
+  ],
+  "page_action": {
+      "default_popup": "html/popup.html",
+      "default_icon": {
+        "16": "images/logo.png",
+        "32": "images/logo.png",
+        "48": "images/logo.png"
+      }
+    },
+  
+  "web_accessible_resources": [
+    "css/style.css",
+    "fonts/Helvetica-Bold.ttf",
+    "fonts/dintextpro.ttf",
+    "images/logo.png",
+    "js/my_file.js"
+  ],
+  "version": "1.0.0",
+  "name": "Yoloco stats",
+  "description": "Уникальный плагин, позволяющий оценивать пользователей Instagram при размещении рекламы",
+  "icons": {
+    "128": "images/logo.png",
+    "16": "images/logo.png",
+    "48": "images/logo.png"
+  },
+  "key": "AAAAB3NzaC1yc2EAAAABJQAAAQEAwPTpZv7luQDTqBJnaWusJmv0yhJEa8ASYKcHohnSv+pROsWoIlofwowzMdzxDv5vdgWMWoOXp7+4KOB3PreR/3UdoUGnLH9L4EWTs+uNA5WKtyVsjkJzUm3RM4LjFMRdbA+G+auoJlrn8cUZmRKDfFJy6E8Mq3nnm8jXnxwbvsalIgdmyz42gWQBvITYqriBFmHI6SIqxLkCWbG0ELIOWfsdyGpM/TlSTlltbyo8utRlfa4lmxr90mr8Is2GRGtQeLFzbd/EiH68p0y+qsUg9ov3nPB1oCbq2xW7Dj5HaaH7S0hP9aBb4lfZUIZDxcMMBQZZM8XutH4T3q3J3cMRFQ=="
+}
