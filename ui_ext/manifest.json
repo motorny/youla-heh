@@ -15,7 +15,7 @@
     "identity",
     "declarativeContent",
     "https://www.googleapis.com/",
-    "http://194.67.110.28:8008/*",
+    "https://194-67-110-28.cloudvps.regruhosting.ru/*",
     "https://www.instagram.com/*"
   ],
 

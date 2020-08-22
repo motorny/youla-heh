@@ -25,11 +25,3 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {    console.log(c
         });
     }
 });
-
-// chrome.browserAction.onClicked.addListener(function(tab) {
-// 	chrome.tabs.create({
-// 		url: "https://music.mts.ru"
-// 	});
-// 	//usage:
-// });
-//

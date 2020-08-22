@@ -46,7 +46,7 @@ class GetProfileStats(Resource):
         """
         args = get_profile_parser.parse_args()
         profile_id = args["profile_id"]
-        data = get_profile_info(profile_id)
+        # data = get_profile_info(profile_id)
         # handle this data to compose stats
         resp = {
             "commentsCnt": 432,

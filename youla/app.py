@@ -9,6 +9,11 @@ from flask_cors import CORS
 from youla.api import api
 from youla.models import db
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+# App is behind one proxy that sets the -For and -Host headers.
+
+
+
 dictConfig(
     {
         "version": 1,
@@ -40,11 +45,14 @@ dictConfig(
 UPLOAD_FOLDER = "/var/www/"
 SQLALCHEMY_DATABASE_URI = "sqlite:///../youla.db"
 
+os.environ['wsgi.url_scheme'] = 'https'
 
 def create_app(config=None):
     app = Flask(__name__)
     app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
     app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+    app.config["SERVER_NAME"] = "194-67-110-28.cloudvps.regruhosting.ru"
+    app.config["PREFERRED_URL_SCHEME"] = 'https'
 
     CORS(app)
     # load default configuration
@@ -76,7 +84,7 @@ def setup_app(app):
 
 
 app = create_app()
-
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1, x_proto=1)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8008, debug=True)
+    app.run(host="127.0.0.1", port=8008, debug=True)

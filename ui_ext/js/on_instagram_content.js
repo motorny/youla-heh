@@ -1,5 +1,19 @@
 console.log("init for inst")
 
+function updateCharts(data) {
+    if (!document.yoloco_chart) {
+        alert('missing chart');
+        return;
+    }
+
+    chartData = [data.commentsPositiveCnt, data.commentsNegativeCnt, data.commentsSpamCnt]
+
+    document.yoloco_chart.data.datasets.forEach((dataset) => {
+        dataset.data = chartData
+    });
+    document.yoloco_chart.update();
+}
+
 
 function injectCanvas() {
     var ctx = $('#yolocoChart');
@@ -7,6 +21,26 @@ function injectCanvas() {
         console.log('already exists');
         return;
     }
+
+    setTimeout(() => {
+        var xhr = new XMLHttpRequest();
+        var url = "https://194-67-110-28.cloudvps.regruhosting.ru/inst/stats";
+        xhr.open("POST", url, true);
+        xhr.responseType = 'json';
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                data = xhr.response;
+                console.log('data recieved', data);
+                updateCharts(data);
+            }
+        };
+        var data = JSON.stringify({
+            "profile_id": "ds"
+        });
+        xhr.send(data);
+    }, 1000);
 
     var checkExist = setInterval(function () {
         if (!$('#yolocoChart').length) {
@@ -24,41 +58,22 @@ function injectCanvas() {
 function populateChart(context) {
     console.log('populating');
     var myChart = new Chart(context, {
-        type: 'bar',
+        type: 'doughnut',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: ['Позитивные', 'Негативные', 'Спам'],
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
+                label: 'Количество комментариев',
+                data: [],
+                backgroundColor:
+                    [
+                        'rgb(5,250,25)',
+                        'rgb(250,119,5)',
+                        'rgb(103,155,241)'
+                    ]
             }]
         },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
     });
+    document.yoloco_chart = myChart;
 }
 
 
