@@ -5,3 +5,4 @@ Flask-SQLAlchemy
 flask-cors
 passlib
 flask-restplus
+instaloader
