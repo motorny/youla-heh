@@ -1,6 +1,9 @@
 import instaloader
 from flask import abort
 
+from youla.utils.inst_parse import get_post_comments, get_profile_posts
+
+
 class Loader:
     __instance = None
 
@@ -21,26 +24,18 @@ def get_post_info(post_id):
     l = Loader.get()
     try:
         post = instaloader.Post.from_shortcode(l.loader.context, post_id)
+        post_comms = get_post_comments(post)
     except instaloader.exceptions.QueryReturnedNotFoundException:
-        abort(404,"Post not found", status="Failed")
-    resp = {
-        "addTarget": "Лента",
-        "commentsCnt": 15,
-        "commentsPositiveCnt": 4,
-        "commentsNegativeCnt": 2,
-        "commentsSpamCnt": 2,
-    }
-    return resp
+        abort(404, "Post not found", status="Failed")
+    return post_comms
 
 
 def get_profile_info(profile_id):
     l = Loader.get()
     try:
         profile = instaloader.Profile.from_username(l.loader.context,profile_id)
+        posts = get_profile_posts(profile)
     except instaloader.exceptions.QueryReturnedNotFoundException:
         abort(404, "Profile not found", status="Failed")
-    resp = {
-        "rep": "good",
-    }
-    return resp
+    return {"posts": [{"shortcode":p.shortcode,"caption":p.caption} for p in posts]}
 
