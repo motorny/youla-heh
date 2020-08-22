@@ -6,3 +6,9 @@ flask-cors
 passlib
 flask-restplus
 instaloader
+gensim
+tensorflow==2.2
+pandas
+numpy
+sklearn
+keras

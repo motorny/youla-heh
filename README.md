@@ -3,7 +3,7 @@
 ## Установка расширения в браузер
 
 Для рекламодателей предоставляется расширение для бразуера Google Chrome.
-Сперва скачайте файл `Source code.zip` с [официальной страницы проекта](https://github.com/motorny/youla-heh/releases), выбирайте последнюю 
+Сперва скачайте файл `ui_ext.zip` с [официальной страницы проекта](https://github.com/motorny/youla-heh/releases), выбирайте последнюю 
 версию. 
 
 Распакуйте скаченный архив стандартными средствами операционной системы.
@@ -28,8 +28,55 @@
 
 ![Использование](./docs/tut5.png?raw=true "Использование")
 
-## Simple run
+Зайдите на [Сайт instagram](https://www.instagram.com/), выберите любой пост в открытом аккаунте,
+нажмите на иконку расширения, а затем на кнопку "Show statistics".
 
+![Пример](./docs/tut5.png?raw=true "Пример")
+
+Ожидайте загрузки результатов.
+
+
+## Развертывание серверной части
+
+### Предварительные требования
+
+Установленные на сервере:
+ - Apache2: для обеспечения защищенного HTTPS соединения
+ - Docker: для запуска веб-сервера
+
+### Установка
+ 
+Простейший способ настройки прокси сервиса Apache2 для обеспечения HTTPS соединения - 
+использование сервиса [Certbot](`https://certbot.eff.org/`), следуйте инструкциям с данного
+сайта, в процессе установки необходимо будет ввести DNS имя сервера.
+
+Затем, необходимо настроить Proxy в Apache2 для переадресации запросов к веб сервису.
+
+В файл `/etc/apache2/sites-available/000-default-le-ssl.conf` добавьте следующие строчки: 
+
+```
+        <Location "/">
+                ProxyPreserveHost On
+                ProxyPass "http://127.0.0.1:8008/"
+                ProxyPassReverse "http://127.0.0.1:8008/"
+                RequestHeader set X-Forwarded-Proto expr=%{REQUEST_SCHEME}
+                RequestHeader set X-Forwarded-SSL expr=%{HTTPS}
+        </Location>
+```
+В файл `/etc/apache2/apache2.conf` добавьте сточку
+
+```
+LoadModule headers_module /usr/lib/apache2/modules/mod_headers.so
+```
+ 
+Установите недостающие модули для Apache2
+```
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod proxy_balancer
+sudo a2enmod lbmethod_byrequests
+```
+ 
 ```bash
 bash ./run.sh
 
@@ -44,6 +91,7 @@ docker image build -t youla-dev ./
 docker ls
 
 docker run  -p 8008:8008 -d youla-dev
+docker run  -d youla-dev
 
 # check it is started
 docker ps

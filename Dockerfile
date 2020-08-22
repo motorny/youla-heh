@@ -5,7 +5,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     musl-dev \
     postgresql-dev \
     && pip install --no-cache-dir psycopg2-binary \
-    && apk del --no-cache .build-deps && apk add postgresql-dev
+    && apk del --no-cache .build-deps && apk add postgresql-dev gcc
 COPY requirements.txt /app/requirements.txt
 WORKDIR /app
 RUN pip install -r requirements.txt
