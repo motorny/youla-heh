@@ -1,5 +1,6 @@
 from itertools import takewhile
 
+
 def get_post_comments(post, max_comments=100):
     post_with_comments = {}
     post_with_comments["shortcode"] = post.shortcode
@@ -15,6 +16,7 @@ def get_post_comments(post, max_comments=100):
             break
     return post_with_comments
 
+
 def no_more_than(limit):
     def limiter(gen):
         cnt = 0
@@ -22,9 +24,9 @@ def no_more_than(limit):
             if cnt > limit:
                 break
             yield item
-            cnt +=1
-    return limiter
+            cnt += 1
 
+    return limiter
 
 
 def get_profile_posts(profile, max_posts=10):

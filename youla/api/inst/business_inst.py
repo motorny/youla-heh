@@ -33,9 +33,8 @@ def get_post_info(post_id):
 def get_profile_info(profile_id):
     l = Loader.get()
     try:
-        profile = instaloader.Profile.from_username(l.loader.context,profile_id)
+        profile = instaloader.Profile.from_username(l.loader.context, profile_id)
         posts = get_profile_posts(profile)
     except instaloader.exceptions.QueryReturnedNotFoundException:
         abort(404, "Profile not found", status="Failed")
-    return {"posts": [{"shortcode":p.shortcode,"caption":p.caption} for p in posts]}
-
+    return {"posts": [{"shortcode": p.shortcode, "caption": p.caption} for p in posts]}

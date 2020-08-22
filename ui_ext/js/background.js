@@ -17,6 +17,14 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
 
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {    console.log(changeInfo)
+    if (changeInfo.url) {
+        console.log('sending update')
+        chrome.tabs.sendMessage(tabId, {
+            message: 'url_updated',
+        });
+    }
+});
 
 // chrome.browserAction.onClicked.addListener(function(tab) {
 // 	chrome.tabs.create({

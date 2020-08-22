@@ -1,7 +1,10 @@
 {
   "manifest_version": 2,
   "background": {
-    "scripts": ["js/background.js"],
+    "scripts": [
+      "js/lib/jquery-3.5.1.min.js",
+      "js/background.js"
+    ],
     "persistent": false
   },
 
@@ -13,7 +16,7 @@
     "declarativeContent",
     "https://www.googleapis.com/",
     "http://194.67.110.28:8008/*",
-    "https://www.instagram.com/"
+    "https://www.instagram.com/*"
   ],
 
   "content_scripts": [
@@ -21,14 +24,17 @@
       "css": [
         "/css/bootstrap.min.css",
         "/css/style.css",
-        "/css/modals.css"
+        "/css/modals.css",
+        "/css/lib/Chart.min.css"
       ],
       "js": [
-        "/js/on_instagram_content.js"
+        "js/lib/Chart.min.js",
+        "js/lib/jquery-3.5.1.min.js",
+        "js/on_instagram_content.js"
       ],
-      
+
       "matches": [
-        "*://www.instagram.com//*"
+        "*://www.instagram.com/*"
       ]
     }
   ],

@@ -5,8 +5,8 @@ from flask_restplus import Namespace, Resource, fields
 
 from youla.models import db
 from youla.utils.fs import save_file
-from .business_inst import get_post_info, get_profile_info
 
+from .business_inst import get_post_info, get_profile_info
 from .req_parsers import get_post_parser, get_profile_parser
 
 ns = Namespace("inst", description="Instagram related operations")
@@ -46,6 +46,14 @@ class GetProfileStats(Resource):
         """
         args = get_profile_parser.parse_args()
         profile_id = args["profile_id"]
-        resp = get_profile_info(profile_id)
+        data = get_profile_info(profile_id)
+        # handle this data to compose stats
+        resp = {
+            "commentsCnt": 432,
+            "commentsPositiveCnt": 205,
+            "commentsNegativeCnt": 78,
+            "commentsSpamCnt": 50,
+            "addPosts": 6,
+        }
         resp.update({"status": "Success"})
         return resp, 200

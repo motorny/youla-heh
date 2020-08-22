@@ -9,22 +9,24 @@ from flask_cors import CORS
 from youla.api import api
 from youla.models import db
 
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '%(levelname)9s -- %(asctime)s - %(module)s - %(message)s',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://sys.stdout',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': 'DEBUG',
-        'handlers': ['wsgi']
+dictConfig(
+    {
+        "version": 1,
+        "formatters": {
+            "default": {
+                "format": "%(levelname)9s -- %(asctime)s - %(module)s - %(message)s",
+            }
+        },
+        "handlers": {
+            "wsgi": {
+                "class": "logging.StreamHandler",
+                "stream": "ext://sys.stdout",
+                "formatter": "default",
+            }
+        },
+        "root": {"level": "DEBUG", "handlers": ["wsgi"]},
     }
-})
-
+)
 
 
 # stream_handler = logging.StreamHandler(stream=sys.stdout)
@@ -36,14 +38,13 @@ dictConfig({
 # logging.getLogger().setLevel(logging.DEBUG)
 
 UPLOAD_FOLDER = "/var/www/"
-SQLALCHEMY_DATABASE_URI = 'sqlite:///../youla.db'
+SQLALCHEMY_DATABASE_URI = "sqlite:///../youla.db"
 
 
 def create_app(config=None):
     app = Flask(__name__)
     app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-    app.config['SQLALCHEMY_DATABASE_URI'] =SQLALCHEMY_DATABASE_URI
-
+    app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 
     CORS(app)
     # load default configuration
