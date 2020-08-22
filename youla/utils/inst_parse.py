@@ -34,7 +34,7 @@ def get_monthly_dynamic(profile):
         cutoff = no_latter_than(this_moment - delta)
         posts_list = list(cutoff(profile.get_posts()))
         posts_num = len(posts_list)
-        monthly_dynamic.append(posts_num - prev_result)
+        monthly_dynamic.insert(0, posts_num - prev_result)
         prev_result = posts_num
         this_moment -= delta
     
