@@ -54,7 +54,7 @@ def get_profile_info(profile_id, brand):
             if len(post_comments_list) == 0:
                 continue
             print(f"Analyzing {len(post_comments_list)} comments with CNN")
-            brand_cnt += sum([comm.lower().count(brand) for comm in post_comments_list])
+            brand_cnt += sum([comm.lower().count(brand) for comm in post_comments_list if comm])
             negCnt, posCnt, spamCnt = cnn.run_model(post_comments_list)
             result["negCnt"].append(negCnt)
             result["posCnt"].append(posCnt)
