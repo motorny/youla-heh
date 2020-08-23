@@ -1,5 +1,5 @@
+from datetime import datetime, timedelta
 from itertools import takewhile
-from datetime import timedelta, datetime
 
 
 def no_more_than(limit):
@@ -20,6 +20,7 @@ def no_latter_than(limit):
             if item.date_utc < limit:
                 break
             yield item
+
     return limiter
 
 
@@ -37,12 +38,12 @@ def get_monthly_dynamic(profile):
         monthly_dynamic.insert(0, posts_num - prev_result)
         prev_result = posts_num
         this_moment -= delta
-    
+
     return monthly_dynamic
 
 
 def get_profile_posts_top_info(profile, max_posts=5):
-    cutoff = no_more_than(max_posts)
+    cutoff = no_more_than(max_posts - 1)
     captions_list = []
     comments_amounts = []
     comments_lists_list = []
@@ -51,7 +52,7 @@ def get_profile_posts_top_info(profile, max_posts=5):
         captions_list.append(post.caption)
         comments_amounts.append(post.comments)
         comments_lists_list.append(get_post_comments_list(post))
-
+    print(len(comments_lists_list))
     return captions_list, comments_amounts, comments_lists_list
 
 

@@ -12,7 +12,8 @@ from .req_parsers import get_post_parser, get_profile_parser
 ns = Namespace("inst", description="Instagram related operations")
 
 req_get_post_model = ns.model("Get post", {"post_id": fields.String,})
-req_get_profile_model = ns.model("Get profile", {"profile_id": fields.String,})
+req_get_profile_model = ns.model("Get profile", {"profile_id": fields.String,
+                                                 "brand": fields.String(required=False)})
 
 
 @ns.route("/p/stats")
@@ -47,8 +48,9 @@ class GetProfileStats(Resource):
         """
         args = get_profile_parser.parse_args()
         profile_id = args["profile_id"]
+        brand = args.get("brand")
         print(f"Processing {profile_id} profile request")
-        resp = get_profile_info(profile_id)
+        resp = get_profile_info(profile_id, brand)
         # handle this data to compose stats
         resp.update({"status": "Success"})
         return resp, 200

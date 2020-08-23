@@ -1,11 +1,13 @@
 import json
-import time
-import instaloader
 import os
-from instaloader import save_structure_to_file
-from youla.utils.inst_parse import no_more_than
-from datetime import timedelta, datetime
+import time
 from collections import Counter
+from datetime import datetime, timedelta
+
+import instaloader
+from instaloader import save_structure_to_file
+
+from youla.utils.inst_parse import no_more_than
 
 
 def read(json_filepath):
@@ -19,6 +21,7 @@ def no_latter_than(limit):
             if item.date_utc < limit:
                 break
             yield item
+
     return limiter
 
 
@@ -28,24 +31,26 @@ if __name__ == "__main__":
     profile_name = "flo_rida"
 
     profile = instaloader.Profile.from_username(L.context, profile_name)
-    
+
     delta = timedelta(180)
     cutoff = no_latter_than(datetime.today() - delta)
     posts_list = list(cutoff(profile.get_posts()))
     print("loading up to {} completed".format(posts_list[-1].date_utc))
     posts_num = len(posts_list)
     print("number of posts:", posts_num)
-    
+
     pattern_list = ["покупай", "советую", "реклама", "artfruit"]
     pattern_counter = Counter()
 
     st = time.time()
     for id, post in enumerate(posts_list):
-        filename = 'newtest'+str(id)+'.json'
+        filename = "newtest" + str(id) + ".json"
         save_structure_to_file(post, filename)
         filetext = read(filename)
         post_json = json.loads(filetext)
-        caption = post_json["node"]["edge_media_to_caption"]["edges"][0]["node"]["text"].lower()
+        caption = post_json["node"]["edge_media_to_caption"]["edges"][0]["node"][
+            "text"
+        ].lower()
         # print(caption)
         cutoff = no_more_than(30)
         comments_list = list(cutoff(post.get_comments()))
@@ -57,7 +62,6 @@ if __name__ == "__main__":
         for pattern in pattern_list:
             pattern_counter[pattern] += int(pattern in caption)
     print(time.time() - st)
-        # print(json.dumps(post_json, indent=2, ensure_ascii=False))
+    # print(json.dumps(post_json, indent=2, ensure_ascii=False))
     print(pattern_counter)
     os.system("rm *.json")
-    

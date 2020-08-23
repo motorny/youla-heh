@@ -35,7 +35,7 @@ function updateProfileCharts(data) {
     document.yolocoProfileChart2.data.datasets[0].data = chartTop.total
     document.yolocoProfileChart2.data.datasets[1].data = chartTop.posCnt
     document.yolocoProfileChart2.data.datasets[2].data = chartTop.negCnt
-    document.yolocoProfileChart2.data.datasets[2].data = chartTop.spamCnt
+    document.yolocoProfileChart2.data.datasets[3].data = chartTop.spamCnt
     document.yolocoProfileChart2.update();
 
 }

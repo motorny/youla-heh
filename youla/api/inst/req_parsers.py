@@ -5,3 +5,4 @@ get_post_parser.add_argument("post_id", type=str, required=True, location="json"
 
 get_profile_parser = reqparse.RequestParser()
 get_profile_parser.add_argument("profile_id", type=str, required=True, location="json")
+get_profile_parser.add_argument("brand", type=str, required=False, location="json")
